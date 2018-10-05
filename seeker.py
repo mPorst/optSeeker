@@ -6,9 +6,10 @@ import re
 #
 # Author: MAPster
 #
-# 
 #
 #
+#
+
 
 def find(name, path):
     for root, dirs, files in os.walk(path):
@@ -40,7 +41,7 @@ def findFunctions(path):
     f.close
     # open file in append mode
     f = open(os.path.join(scriptPath, "existingFunctions.log"), 'a')
-    # search entire file tree for "setup.hpp" files. If found append the module name to the log file 
+    # search entire file tree for "setup.hpp" files. If found append the module name to the log file
     functions = []
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -64,7 +65,7 @@ def findModules(path):
     f.close
     # open file in append mode
     f = open(os.path.join(scriptPath, "existingModules.log"), 'a')
-    # search entire file tree for "setup.hpp" files. If found append the module name to the log file 
+    # search entire file tree for "setup.hpp" files. If found append the module name to the log file
     modules = []
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -84,8 +85,7 @@ def findModules(path):
 # get current path of the python file
 path = os.path.dirname(os.path.abspath(__file__))
 # go up one level in file hierarchy, assuming that the folder of this script is in the same directory as the "opt" folder
-newPath = os.path.split(path)
-basePath = newPath[0] # the first element of newPath holds the base path, the second the directory
+basePath = os.path.dirname(path)
 # From the base path go into "opt" directory
 optPath = os.path.join(basePath, "opt")
 modules = findModules(optPath)
