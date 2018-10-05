@@ -1,5 +1,6 @@
 import os
 import re
+from collections import defaultdict
 
 # Script for walking through the OPT mission and searching for function calls
 # to check where which functions are called
@@ -9,6 +10,9 @@ import re
 #
 #
 #
+LOG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'log'))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+OPT_DIR = os.path.join(BASE_DIR, 'opt')
 
 
 def find(name, path):
@@ -34,63 +38,65 @@ def searchInFiles(expr, path):
                     if expr in line:
                         print("found " + expr + " in file " + name + "\n" + line)
 
-def findFunctions(path):
-    # delete any previously generated logs by opening in truncate mode (w) or create if not already created (+)
-    scriptPath = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(scriptPath, "existingFunctions.log"), 'w+')
-    f.close
-    # open file in append mode
-    f = open(os.path.join(scriptPath, "existingFunctions.log"), 'a')
+def findFunctions(path, log=True):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
-    functions = []
+    functions = defaultdict(list)
     for root, dirs, files in os.walk(path):
         for name in files:
-            if("fnc_" in name):
+            if(name.startswith('fnc_')):
                 # after split module is an array of two elements, the actual module name is in the second entry
                 module = os.path.split(root)
                 module = os.path.split(module[0])
                 module = module[1]
-                name = name.split('fnc_')
-                name = name[1].split('.sqf')
-                name = name[0]
-                print(module + " has function " + name)
-                f.write(module + "-" + name + "\n")
-                #print(module)
-                #print(os.path.join(root, name))
+                name = os.path.splitext(name)[0][len('fnc_'):]
+                functions[module].append(name)
+                
+    if log:
+        with open(os.path.join(LOG_DIR, "existingFunctions.log"), 'w+') as f:
+            for module in functions.keys():
+                f.write(module + '\n')
+                for fnc in functions[module]:
+                    f.write('  ' + fnc + '\n')
+                
+    return functions
+    
 
-def findModules(path):
-    # delete any previously generated logs by opening in truncate mode (w) or create if not already created (+)
-    scriptPath = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(scriptPath, "existingModules.log"), 'w+')
-    f.close
-    # open file in append mode
-    f = open(os.path.join(scriptPath, "existingModules.log"), 'a')
+def findModules(path, log=True):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
-    modules = []
+    _modules = []
     for root, dirs, files in os.walk(path):
         for name in files:
-            if(name == "setup.hpp"):
+            if name == "setup.hpp":
                 # after split module is an array of two elements, the actual module name is in the second entry
                 module = os.path.split(root)
                 module = module[1]
-                f.write(module + "\n")
-                modules.append(module)
-                #print(module)
-                #print(os.path.join(root, name))
-    return modules
+                _modules.append(module)
+    _modules = sorted(_modules)
+    
+    if log:
+        with open(os.path.join(LOG_DIR, "existingModules.log"), 'w+') as f:
+            for module in _modules:
+                f.write(module + '\n')
+                
+    return _modules
+
 
 #call this function ONLY after findModules and findFunctions
 
-
-# get current path of the python file
-path = os.path.dirname(os.path.abspath(__file__))
 # go up one level in file hierarchy, assuming that the folder of this script is in the same directory as the "opt" folder
-basePath = os.path.dirname(path)
 # From the base path go into "opt" directory
-optPath = os.path.join(basePath, "opt")
-modules = findModules(optPath)
+if not os.path.isdir(OPT_DIR):
+    print("Please make sure that the opt directory is a child directory of the current parent directory. %s was not found." % optPath)
+
+# create log folder
+if not os.path.isdir(LOG_DIR):
+    os.mkdir("log")
+
+modules = findModules(OPT_DIR)
 for mod in modules:
     print(mod)
-findFunctions(optPath)
+functions = findFunctions(OPT_DIR)
+for module, fnc in functions.items():
+    print(module, fnc)
 #searchInFiles("EFUNC", optPath)
 #print(find("FEATURES.md", optPath))
