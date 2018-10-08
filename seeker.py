@@ -22,7 +22,7 @@ def find(name, path):
 
 def searchInFiles(expr, path):
     scriptPath = os.path.dirname(os.path.abspath(__file__))
-    f = open(os.path.join(scriptpath, "functionCalls.log", 'w+'))
+    f = open(os.path.join(LOG_DIR, "functionCalls.log", 'w+'))
     for root, dirs, files in os.walk(path):
         for name in files:
             # for each file split name to check file ending
@@ -85,18 +85,19 @@ def findModules(path, log=True):
 
 # go up one level in file hierarchy, assuming that the folder of this script is in the same directory as the "opt" folder
 # From the base path go into "opt" directory
-if not os.path.isdir(OPT_DIR):
-    print("Please make sure that the opt directory is a child directory of the current parent directory. %s was not found." % optPath)
-
-# create log folder
-if not os.path.isdir(LOG_DIR):
-    os.mkdir("log")
-
-modules = findModules(OPT_DIR)
-for mod in modules:
-    print(mod)
-functions = findFunctions(OPT_DIR)
-for module, fnc in functions.items():
-    print(module, fnc)
-#searchInFiles("EFUNC", optPath)
-#print(find("FEATURES.md", optPath))
+if __name__ == '__main__':
+    if not os.path.isdir(OPT_DIR):
+        print("Please make sure that the opt directory is a child directory of the current parent directory. %s was not found." % OPT_DIR)
+    
+    # create log folder
+    if not os.path.isdir(LOG_DIR):
+        os.mkdir(LOG_DIR)
+    
+    modules = findModules(OPT_DIR)
+    for mod in modules:
+        print(mod)
+    functions = findFunctions(OPT_DIR)
+    for module, fnc in functions.items():
+        print(module, fnc)
+    #searchInFiles("EFUNC", optPath)
+    #print(find("FEATURES.md", optPath))
