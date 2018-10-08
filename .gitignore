@@ -1,4 +1,8 @@
-
+#Pycharm
 \.idea/
 
+#PythonAnywhere Server Files
+__pycache__/
+
+#Log Files from OPT Seeker
 log/
