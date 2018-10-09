@@ -15,27 +15,61 @@
     {% endif %}
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-3">
-                <nav class="main-navigation">
-                    {% if functions %}
-                    <div class="nav list-group modules">
-                        {% for module in functions.keys()|sort %}
-                        <a class="nav-item list-group-item list-group-item-action list-group-item-primary" href="#" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">{{ module }} <span class="badge badge-primary float-right">{{ '{0:02d}'.format(functions[module]|length)}}</span></a>
-                            {% if functions[module] %}
-                            <div class="nav list-group collapse functions" id="submenu{{loop.index}}" role="menu" aria-labelledby="nav-btn-mod-{{loop.index}}">
-                                {% for fnc in functions[module]|sort %}
-                                <a class="nav-item list-group-item list-group-item-action function-name">{{ fnc }}</a>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
+            <div class="col pl-0 bg-dark">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                  <a class="navbar-brand" href="#">Navbar</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                      <li class="nav-item active">
+                        <a class="nav-link" href="/functions">Functions <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Calls</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Setup</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                      </li>
                     </ul>
-                    {% endif %}
+                    <form class="form-inline my-2 my-lg-0">
+                      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                  </div>
                 </nav>
             </div>
-            <div class="col">
+        </div>
+        <div class="row">
+            <div class="col pl-0 pr-0 col-sm-auto" style="max-height: 100vh; overflow-y: auto">
+                {% if functions %}
+                <div class="list-group modules">
+                    {% for module in functions.keys()|sort %}
+                    <div class="list-group-item list-group-item-action text-white bg-dark rounded-0 border-light border-left-0 flex-column align-items-start" href="#">
+                        <div class="d-flex w-100 justify-content-between" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">
+                          <span class="">{{ module }}</span>
+                          <span class="badge badge-info">{{ '{0:02d}'.format(functions[module]|length)}}</span>
+                        </div>
+                        {% if functions[module] %}
+                        <div class="list-group list-group-flush collapse functions" id="submenu{{loop.index}}" role="menu" aria-labelledby="nav-btn-mod-{{loop.index}}">
+                            {% for fnc in functions[module]|sort %}
+                            <a class="list-group-item list-group-item-action flex-column align-items-start function-name" href="#">{{ fnc }}</a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col col-sm">
                 <main>
                     <h1>The OPT API <span class="badge badge-secondary">WIP</span></h1>
                     <span class="badge badge-primary">Primary</span>
@@ -50,7 +84,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

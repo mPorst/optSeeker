@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 # ROUTES
 @app.route('/')
+@app.route('/functions')
 def opt_overview():
 
     modules = list_of_modules()
