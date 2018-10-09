@@ -15,5 +15,5 @@ def opt_overview():
     modules = list_of_modules()
     functions = list_of_functions_per_module()
 
-    return render_template('index.html', title='OPT Seeker', functions=functions)
+    return render_template('page-functions.html', title='Functions', functions=functions)
 

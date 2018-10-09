@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block sidebar_left %}
+
+    {% if functions %}
+    <div class="list-group modules">
+        {% for module in functions.keys()|sort %}
+        <div class="list-group-item list-group-item-action text-white bg-dark rounded-0 border-light border-left-0 flex-column align-items-start" href="#">
+            <div class="d-flex w-100 mb-1 justify-content-between" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">
+              <span class="">{{ module }}</span>
+              <span class="badge badge-info">{{ '{0:02d}'.format(functions[module]|length)}}</span>
+            </div>
+            {% if functions[module] %}
+            <div class="list-group list-group-flush collapse functions" id="submenu{{loop.index}}" role="menu" aria-labelledby="nav-btn-mod-{{loop.index}}">
+                {% for fnc in functions[module]|sort %}
+                <a class="list-group-item list-group-item-action flex-column align-items-start function-name" href="#">{{ fnc }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block content_main %}
+    <main>
+        <h1>The OPT API <span class="badge badge-secondary">WIP</span></h1>
+        <span class="badge badge-primary">Primary</span>
+        <span class="badge badge-secondary">Secondary</span>
+        <span class="badge badge-success">Success</span>
+        <span class="badge badge-danger">Danger</span>
+        <span class="badge badge-warning">Warning</span>
+        <span class="badge badge-info">Info</span>
+        <span class="badge badge-light">Light</span>
+        <span class="badge badge-dark">Dark</span>
+    </main>
+{% endblock %}

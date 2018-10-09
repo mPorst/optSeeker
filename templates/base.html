@@ -49,20 +49,10 @@
         </div>
         <div class="row">
             <div class="col pl-0 pr-0 col-md-2" style="max-height: 100vh; overflow-y: auto">
-                {% block sidebar-left %}
+                {% block sidebar_left %}{% endblock %}
             </div>
             <div class="col col-sm">
-                <main>
-                    <h1>The OPT API <span class="badge badge-secondary">WIP</span></h1>
-                    <span class="badge badge-primary">Primary</span>
-                    <span class="badge badge-secondary">Secondary</span>
-                    <span class="badge badge-success">Success</span>
-                    <span class="badge badge-danger">Danger</span>
-                    <span class="badge badge-warning">Warning</span>
-                    <span class="badge badge-info">Info</span>
-                    <span class="badge badge-light">Light</span>
-                    <span class="badge badge-dark">Dark</span>
-                </main>
+                {% block content_main %}{% endblock %}
             </div>
         </div>
     </div>
