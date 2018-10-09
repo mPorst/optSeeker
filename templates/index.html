@@ -48,12 +48,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col pl-0 pr-0 col-sm-auto" style="max-height: 100vh; overflow-y: auto">
+            <div class="col pl-0 pr-0 col-md-2" style="max-height: 100vh; overflow-y: auto">
                 {% if functions %}
                 <div class="list-group modules">
                     {% for module in functions.keys()|sort %}
                     <div class="list-group-item list-group-item-action text-white bg-dark rounded-0 border-light border-left-0 flex-column align-items-start" href="#">
-                        <div class="d-flex w-100 justify-content-between" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">
+                        <div class="d-flex w-100 mb-1 justify-content-between" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">
                           <span class="">{{ module }}</span>
                           <span class="badge badge-info">{{ '{0:02d}'.format(functions[module]|length)}}</span>
                         </div>
