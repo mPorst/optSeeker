@@ -13,7 +13,7 @@
             {% if functions[module] %}
             <div class="list-group list-group-flush collapse functions" id="submenu{{loop.index}}" role="menu" aria-labelledby="nav-btn-mod-{{loop.index}}">
                 {% for fnc in functions[module]|sort %}
-                <a class="list-group-item list-group-item-action flex-column align-items-start function-name" href="#">{{ fnc }}</a>
+                <a class="list-group-item list-group-item-action flex-column align-items-start function-name" href="functions/{{ module }}/{{ fnc }}">{{ fnc }}</a>
                 {% endfor %}
             </div>
             {% endif %}
