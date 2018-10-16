@@ -31,7 +31,7 @@ def opt_function_header(module, fnc):
         'page-function-header.html',
         title=fnc_name_full,
         module=module,
-        function=fnc,
+        function=fnc,s
         functions=functions,
         header=header,
         content=content
