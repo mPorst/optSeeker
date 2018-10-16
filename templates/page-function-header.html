@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block sidebar_left %}
+
+    {% if functions %}
+    <div class="list-group modules">
+        {% for module in functions.keys()|sort %}
+        <div class="list-group-item list-group-item-action text-white bg-dark rounded-0 border-light border-left-0 flex-column align-items-start" href="#">
+            <div class="d-flex w-100 mb-1 justify-content-between" id="nav-btn-mod-{{loop.index}}" data-toggle="collapse" data-target="#submenu{{loop.index}}" aria-expanded="false">
+              <span class="">{{ module }}</span>
+              <span class="badge badge-info">{{ '{0:02d}'.format(functions[module]|length)}}</span>
+            </div>
+            {% if functions[module] %}
+            <div class="list-group list-group-flush collapse functions" id="submenu{{loop.index}}" role="menu" aria-labelledby="nav-btn-mod-{{loop.index}}">
+                {% for fnc in functions[module]|sort %}
+                <a class="list-group-item list-group-item-action flex-column align-items-start function-name" href="/functions/{{ module }}/{{ fnc }}">{{ fnc }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block content_main %}
+    <main>
+        <form>
+            <div class="form-group">
+                {% if header['Description'] %}
+                <label for="Description">Description</label>
+                <textarea class="form-control" id="Description" rows="{{ header['Description']|length }}" readonly>{{ header['Description']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Author'] %}
+                <label for="Author">Author</label>
+                <input class="form-control" id="Author" type="text" placeholder="{{ header['Author'] }}" readonly>
+                {% endif %}
+
+                {% if header['Arguments'] %}
+                <label for="Arguments">Arguments</label>
+                <textarea class="form-control" id="Arguments" rows="{{ header['Arguments']|length }}" readonly>{{ header['Arguments']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Return Value'] %}
+                <label for="ReturnValue">Return Value</label>
+                <textarea class="form-control" id="ReturnValue" rows="{{ header['Return Value']|length }}" readonly>{{ header['Return Value']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Server only'] %}
+                <label for="Serveronly">Server only</label>
+                <textarea class="form-control" id="Serveronly" rows="{{ header['Server only']|length }}" readonly>{{ header['Server only']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Public'] %}
+                <label for="Public">Public</label>
+                <textarea class="form-control" id="Public" rows="{{ header['Public']|length }}" readonly>{{ header['Public']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Global'] %}
+                <label for="Global">Global</label>
+                <textarea class="form-control" id="Global" rows="{{ header['Global']|length }}" readonly>{{ header['Global']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Sideeffects'] %}
+                <label for="Sideeffects">Sideeffects</label>
+                <textarea class="form-control" id="Sideeffects" rows="{{ header['Sideeffects']|length }}" readonly>{{ header['Sideeffects']|join('\n') }}</textarea>
+                {% endif %}
+
+                {% if header['Example'] %}
+                <label for="Example">Examplee</label>
+                <textarea class="form-control" id="Example" rows="{{ header['Example']|length }}" readonly>{{ header['Example']|join('\n') }}</textarea>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Header speichern</button>
+        </form>
+
+    </main>
+{% endblock %}

@@ -9,7 +9,7 @@ LOG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'log'))
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 OPT_DIR = os.path.join(BASE_DIR, 'opt')
 END_HEADER = '#include "script_component.hpp"'
-HEADER_KEYS = ['Author:', 'Arguments:', 'Return Value:', 'Server only:', 'Public:', 'Global:', 'Sideeffects:', 'Example:']
+HEADER_KEYS = ['Description:', 'Author:', 'Arguments:', 'Return Value:', 'Server only:', 'Public:', 'Global:', 'Sideeffects:', 'Example:']
 
 def list_of_functions_per_module(path=OPT_DIR, log=True):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
@@ -52,40 +52,44 @@ def list_of_modules(path=OPT_DIR, log=True):
 
     return _modules
 
-def read_fnc_header(module, fnc):
+def read_fnc(module, fnc):
+    """find function in module/functions folder and read out its header as key => value pairs"""
     header = defaultdict(list)
     fnc_name_full = 'fnc_{0}.sqf'.format(fnc)
     
+    # find correct folder
     for root, dirs, files in os.walk(OPT_DIR):
         if fnc_name_full in files:
             if os.path.basename(os.path.split(root)[0]) == module:
+                # read in whole content
                 with open(os.path.join(root, fnc_name_full)) as fhandle:
                     content = fhandle.read()
                 
+                # if header can be found
                 if content.find(END_HEADER) != -1:
                     header_raw = content.split(END_HEADER)[0]
-                    header_split = header_raw.split('\n')
-                    
-                    is_reading = False
+                    # transform raw header into separate lines
+                    header_split = [x for x in header_raw.split('\n') if x.strip() not in ['/**', '*', '*/', '']]
+
+                    # read in the content of one key until empty line
                     last_seen_key = ''
+                    key_found = False
                     for line in header_split:
-                        if is_reading and not len(line.strip('*')):
-                            is_reading = False
-                            continue
+                        print(line)
+                        for key in HEADER_KEYS:
+                            if line.find(key) != -1:
+                                last_seen_key = key
+                                key_found = True
+                                break
                         
-                        if not is_reading:
-                            for key in HEADER_KEYS:
-                                if line.find(key) != -1:
-                                    is_reading = True
-                                    last_seen_key = key
-                                    break
+                        # if there was a new key, jump to next line
+                        if key_found:
+                            key_found = False
                             continue
                             
-                        if is_reading:
-                            header[last_seen_key[:-1]].append(line.strip('*').strip())
-                            
-    
-    return header
+                        header[last_seen_key[:-1]].append(line.strip('*').strip())
+
+    return header, content
 
 # create log folder
 if not os.path.isdir(LOG_DIR):
@@ -105,7 +109,7 @@ if __name__ == '__main__':
     #for module, fnc in functions.items():
         #print(module, fnc)
         
-    header = read_fnc_header('beam', 'beam')
+    header = read_fnc('blankcomponent', 'header')
     print(header)
     #searchInFiles("EFUNC", optPath)
     #print(find("FEATURES.md", optPath))
