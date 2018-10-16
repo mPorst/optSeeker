@@ -67,7 +67,8 @@ def read_fnc(module, fnc):
                 
                 # if header can be found
                 if content.find(END_HEADER) != -1:
-                    header_raw = content.split(END_HEADER)[0]
+                    header_raw, content = content.split(END_HEADER)
+                    
                     # transform raw header into separate lines
                     header_split = [x for x in header_raw.split('\n') if x.strip() not in ['/**', '*', '*/', '']]
 
@@ -89,7 +90,7 @@ def read_fnc(module, fnc):
                             
                         header[last_seen_key[:-1]].append(line.strip('*').strip())
 
-    return header, content
+    return header, content.lstrip().rstrip()
 
 # create log folder
 if not os.path.isdir(LOG_DIR):
