@@ -76,7 +76,6 @@ def read_fnc(module, fnc):
                     last_seen_key = ''
                     key_found = False
                     for line in header_split:
-                        print(line)
                         for key in HEADER_KEYS:
                             if line.find(key) != -1:
                                 last_seen_key = key
@@ -110,8 +109,7 @@ if __name__ == '__main__':
     #for module, fnc in functions.items():
         #print(module, fnc)
         
-    header = read_fnc('blankcomponent', 'header')
-    print(header)
+    header, content = read_fnc('beam', 'beam')
     #searchInFiles("EFUNC", optPath)
     #print(find("FEATURES.md", optPath))
 
