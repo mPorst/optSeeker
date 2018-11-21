@@ -23,10 +23,10 @@ def opt_overview():
 
 @app.route('/functions/<string:module>/<string:fnc>')
 def opt_function_header(module, fnc):
-    header, content = read_fnc(module, fnc)
+    header, content, attributes = read_fnc(module, fnc)
     functions = list_of_functions_per_module()
     fnc_name_full = 'fnc_{0}.sqf'.format(fnc)
-    
+
     return render_template(
         'page-function-header.html',
         title=fnc_name_full,
@@ -34,7 +34,8 @@ def opt_function_header(module, fnc):
         function=fnc,
         functions=functions,
         header=header,
-        content=content
+        content=content,
+        attributes=attributes
     )
 
 
