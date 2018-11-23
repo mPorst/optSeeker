@@ -1,5 +1,4 @@
 import os
-import re
 from collections import defaultdict
 
 
@@ -11,9 +10,10 @@ OPT_DIR = os.path.join(BASE_DIR, 'opt')
 END_HEADER = '#include "script_component.hpp"'
 HEADER_KEYS = ['Description:', 'Author:', 'Arguments:', 'Return Value:', 'Server only:', 'Public:', 'Global:', 'Sideeffects:', 'Example:']
 
-def list_of_functions_per_module(path=OPT_DIR, log=True):
+def list_of_functions_per_module(path=OPT_DIR, log=False):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
     functions = defaultdict(list)
+    attributes = {}
     for root, dirs, files in os.walk(path):
         for name in files:
             if(name.startswith('fnc_')):
@@ -22,17 +22,18 @@ def list_of_functions_per_module(path=OPT_DIR, log=True):
                 module = os.path.split(module[0])
                 module = module[1]
                 name = os.path.splitext(name)[0][len('fnc_'):]
-                _, _, attributes = read_fnc(module, name)
-                functions[module].append((name, attributes))
+                _, _, fnc_attributes = read_fnc(module, name)
+                functions[module].append(name)
+                attributes[(module,name)] = fnc_attributes
 
     if log:
         with open(os.path.join(LOG_DIR, "existingFunctions.log"), 'w+') as f:
             for module in functions.keys():
                 f.write(module + '\n')
-                for fnc, _ in functions[module]:
+                for fnc in functions[module]:
                     f.write('  ' + fnc + '\n')
 
-    return functions
+    return functions, attributes
 
 def list_of_modules(path=OPT_DIR, log=True):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
@@ -89,6 +90,7 @@ def read_fnc(module, fnc):
                             continue
 
                         header[last_seen_key[:-1]].append(line.strip('*').strip())
+                break
 
     attributes = {}
     if "Public" in header:
@@ -120,11 +122,11 @@ if __name__ == '__main__':
     #modules = list_of_modules(OPT_DIR)
     #for mod in modules:
         #print(mod)
-    #functions = list_of_functions_per_module(OPT_DIR)
+    functions, attributes = list_of_functions_per_module(OPT_DIR, log=False)
     #for module, fnc in functions.items():
         #print(module, fnc)
 
-    header, content, attributes = read_fnc('beam', 'beam')
+    #header, content, attributes = read_fnc('beam', 'beam')
     #searchInFiles("EFUNC", optPath)
     #print(find("FEATURES.md", optPath))
 
