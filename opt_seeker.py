@@ -23,9 +23,9 @@ def list_of_functions_per_module(return_attributes, path=OPT_DIR, log=False):
                 module = os.path.split(module[0])
                 module = module[1]
                 name = os.path.splitext(name)[0][len('fnc_'):]
-                _, _, fnc_attributes = read_fnc(module, name, return_attributes)
+                result_dict = read_fncread_fnc(module, name, return_attributes)
                 all_functions[module].append(name)
-                all_attributes[(module, name)] = fnc_attributes
+                all_attributes[(module, name)] = result_dict['attributes']
 
     if log:
         with open(os.path.join(LOG_DIR, "existingFunctions.log"), 'w+') as f:

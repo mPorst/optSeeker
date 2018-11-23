@@ -45,7 +45,7 @@ def opt_function_header(module, fnc):
     :param fnc: name of the function
     :return:
     """
-    return_dict = read_fnc(module, fnc)
+    return_dict = read_fnc(module, fnc, return_attributes=False)
     fnc_name_full = 'fnc_{0}.sqf'.format(fnc)
 
     return render_template(
