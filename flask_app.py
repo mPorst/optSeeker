@@ -19,7 +19,7 @@ def  read_in_functions():
     attributes_cache: dict - list of header data keyed by (module,function)
     """
     global functions_cache, attributes_cache
-    result_dict = list_of_functions_per_module()
+    result_dict = list_of_functions_per_module(return_attributes=True)
     functions_cache, attributes_cache = result_dict['functions'], result_dict['attributes']
     
 # ROUTES
@@ -45,7 +45,7 @@ def opt_function_header(module, fnc):
     :param fnc: name of the function
     :return:
     """
-    return_dict = read_fnc(module, fnc, return_attributes=False)
+    return_dict = read_fnc(module, fnc)
     fnc_name_full = 'fnc_{0}.sqf'.format(fnc)
 
     return render_template(

@@ -11,7 +11,7 @@ END_HEADER = '#include "script_component.hpp"'
 HEADER_KEYS = ['Description:', 'Author:', 'Arguments:', 'Return Value:', 'Server only:', 'Public:', 'Global:', 'Sideeffects:', 'Example:']
 
 
-def list_of_functions_per_module(path=OPT_DIR, log=False):
+def list_of_functions_per_module(return_attributes, path=OPT_DIR, log=False):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
     all_functions = defaultdict(list)
     all_attributes = {}
@@ -23,7 +23,7 @@ def list_of_functions_per_module(path=OPT_DIR, log=False):
                 module = os.path.split(module[0])
                 module = module[1]
                 name = os.path.splitext(name)[0][len('fnc_'):]
-                _, _, fnc_attributes = read_fnc(module, name)
+                _, _, fnc_attributes = read_fnc(module, name, return_attributes)
                 all_functions[module].append(name)
                 all_attributes[(module, name)] = fnc_attributes
 
