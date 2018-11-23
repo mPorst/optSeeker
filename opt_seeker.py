@@ -10,30 +10,32 @@ OPT_DIR = os.path.join(BASE_DIR, 'opt')
 END_HEADER = '#include "script_component.hpp"'
 HEADER_KEYS = ['Description:', 'Author:', 'Arguments:', 'Return Value:', 'Server only:', 'Public:', 'Global:', 'Sideeffects:', 'Example:']
 
+
 def list_of_functions_per_module(path=OPT_DIR, log=False):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
-    functions = defaultdict(list)
-    attributes = {}
+    all_functions = defaultdict(list)
+    all_attributes = {}
     for root, dirs, files in os.walk(path):
         for name in files:
-            if(name.startswith('fnc_')):
+            if name.startswith('fnc_'):
                 # after split module is an array of two elements, the actual module name is in the second entry
                 module = os.path.split(root)
                 module = os.path.split(module[0])
                 module = module[1]
                 name = os.path.splitext(name)[0][len('fnc_'):]
                 _, _, fnc_attributes = read_fnc(module, name)
-                functions[module].append(name)
-                attributes[(module,name)] = fnc_attributes
+                all_functions[module].append(name)
+                all_attributes[(module, name)] = fnc_attributes
 
     if log:
         with open(os.path.join(LOG_DIR, "existingFunctions.log"), 'w+') as f:
-            for module in functions.keys():
+            for module in all_functions.keys():
                 f.write(module + '\n')
-                for fnc in functions[module]:
+                for fnc in all_functions[module]:
                     f.write('  ' + fnc + '\n')
 
-    return functions, attributes
+    return {'functions': all_functions, 'attributes': all_attributes}
+
 
 def list_of_modules(path=OPT_DIR, log=True):
     # search entire file tree for "setup.hpp" files. If found append the module name to the log file
@@ -54,11 +56,13 @@ def list_of_modules(path=OPT_DIR, log=True):
 
     return _modules
 
-def read_fnc(module, fnc):
+
+def read_fnc(module, fnc, return_attributes=True):
     """find function in module/functions folder and read out its header as key => value pairs"""
     header = defaultdict(list)
     fnc_name_full = 'fnc_{0}.sqf'.format(fnc)
-
+    result = {}
+    
     # find correct folder
     for root, dirs, files in os.walk(OPT_DIR):
         if fnc_name_full in files:
@@ -91,22 +95,33 @@ def read_fnc(module, fnc):
 
                         header[last_seen_key[:-1]].append(line.strip('*').strip())
                 break
+    
+    result['header'] = header
+    result['content'] = content
+    
+    if return_attributes:
+        result['attributes'] = process_fnc_header(header)
 
-    attributes = {}
+    return result
+
+
+def process_fnc_header(header):
+    result = {}
     if "Public" in header:
         if any([True for line in header['Public'] if line.startswith('yes')]):
-            attributes['Public'] = True
+            result['Public'] = True
     if "Global" in header:
         if any([True for line in header['Global'] if line.startswith('yes')]):
-            attributes['Global'] = True
+            result['Global'] = True
     if "Server only" in header:
         if any([True for line in header['Server only'] if line.startswith('yes')]):
-            attributes['Server only'] = True
+            result['Server only'] = True
     if "Sideeffects" in header:
         if header['Sideeffects']:
-            attributes['Sideeffects'] = True
+            result['Sideeffects'] = True
+            
+    return result
 
-    return header, content.lstrip().rstrip(), attributes
 
 # create log folder
 if not os.path.isdir(LOG_DIR):
