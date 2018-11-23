@@ -92,8 +92,9 @@ def read_fnc(module, fnc, return_attributes=True):
                         if key_found:
                             key_found = False
                             continue
-
-                        header[last_seen_key[:-1]].append(line.strip('*').strip())
+                        
+                        if last_seen_key != '':
+                            header[last_seen_key[:-1]].append(line.strip('*').strip())
                 break
     
     result['header'] = header
